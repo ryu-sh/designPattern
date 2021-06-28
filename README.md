@@ -25,7 +25,7 @@
     - 여러 개의 스레드가 하나뿐인 counter 변수 값에 동시에 접근해 갱신하는 것을 방지한다.
   - getInstance()에 Lock을 하는 방식이라 속도가 느리다.(비용이 비쌈. 병목현상이 일어남.)
 
-예제 : 
+예제 : https://github.com/ryu-sh/desingPattern/tree/master/src/designPattern/singleton
 ## flyweight pattern
 
 예제 : 
