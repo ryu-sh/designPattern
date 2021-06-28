@@ -26,7 +26,64 @@
   - getInstance()에 Lock을 하는 방식이라 속도가 느리다.(비용이 비쌈. 병목현상이 일어남.)
 
 예제 : https://github.com/ryu-sh/desingPattern/tree/master/src/designPattern/singleton
+
 ## flyweight pattern
+ - Flyweight 패턴은 비용이 큰 자원을 공통으로 사용할 수 있도록 만드는 패턴이다. 자원에 대한 비용은 크게 두가지로 나눠 볼 수 있다.
+1. 중복 생성될 가능성이 높은 경우
+ - 중복 생성될 가능성이 높다는 것은 동일한 자원이 자주 사용될 가능성이 매우 높다는 것을 의미한다. 이런 자원은 공통 자원 형태로 관리하고 있다가 요청이 있을 때 제공해 주는 편이 좋다.
+
+2. 자원 생성 비용은 큰데 사용 빈도가 낮은 경우
+ - 이런 자원을 항상 미리 생성해 두는 것은 낭비이다. 따라서 요청이 있을 때에 생성해서 제공해 주는 편이 좋다
+
+이 두가지 목적을 위해서 Flyweight 패턴은 자원 생성과 제공을 책임진다. 자원의 생성을 담당하는 Factory 역할과 관리 역할을 분리하는 것이 좋을 수 있으나, 일반적으로는 두 역할의 크기가 그리 크지 않아서 하나의 클래스가 담당하도록 구현한다.
+
+Flyweight 패턴은 실제 여러 곳에서 사용된다. 쓰레드 풀이나 객체 재사용 풀도 일종의 Flyweight 패턴이다. 
+
+Java 라이브러리들 중에서도 이를 사용하는데, 매우 사용 빈도가 높은 Integer 클래스에도 이와 같은 패턴이 적용되어 있다.아래는 Integer 클래스에서 사용하는 Flywight 패턴의 코드이다.
+
+```java
+private static class IntegerCache {
+    static final int low = -128;
+    static final int high;
+    static final Integer cache[];
+    static { // static으로 실행되기 때문에 실행 이전에 생성이 완료됨.
+        // high value may be configured by property
+        int h = 127;
+        String integerCacheHighPropValue =
+                sun.misc.VM.getSavedProperty("java.lang.Integer.IntegerCache.high");
+        if (integerCacheHighPropValue != null) {
+            try {
+                int i = parseInt(integerCacheHighPropValue);
+                i = Math.max(i, 127);
+                // Maximum array size is Integer.MAX_VALUE
+                h = Math.min(i, Integer.MAX_VALUE - (-low) -1);
+            } catch( NumberFormatException nfe) {
+                // If the property cannot be parsed into an int, ignore it.
+            }
+        }
+        high = h;
+        cache = new Integer[(high - low) + 1]; // Flyweight 생성 부분
+        int j = low;
+        for(int k = 0; k < cache.length; k++)
+            cache[k] = new Integer(j++);
+        // range [-128, 127] must be interned (JLS7 5.1.7)
+        assert IntegerCache.high >= 127;
+    }
+    private IntegerCache() {}
+}
+public static Integer valueOf(int i) {  // Flyweight 객체 제공 부분
+    if (i >= IntegerCache.low && i <= IntegerCache.high)
+        return IntegerCache.cache[i + (-IntegerCache.low)];
+    return new Integer(i);
+} 
+```
+이 소스에서는 IntegerCache라는 static 클래스를 통해서 Integer의 일정 범위를 미리 생성해 둔다. 
+
+전체 범위는 VM(Virtual Machine)에 따라서 달라질 수 있음을 알 수 있다. 하지만 보통은 -128에서 127까지 범위의 Integer 클래스를 배열 형식으로 만들어 둔다. 
+
+그리고 valueOf() 메소드가 호출 되었을 때 요청된 Integer 값이 -128에서 127 사이라면 이미 생성된 Integer 객체를 반환해 준다. 
+
+이 코드는 jre1.8.0_91 기준으로 Integer 클래스의 780 ~833 번째 라인에 들어 있는 코드이다.
 
 예제 : 
 
