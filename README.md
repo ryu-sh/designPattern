@@ -89,6 +89,35 @@ public static Integer valueOf(int i) {  // Flyweight 객체 제공 부분
 
 이 코드는 jre1.8.0_91 기준으로 Integer 클래스의 780 ~833 번째 라인에 들어 있는 코드이다.
 
+예제 : https://github.com/ryu-sh/desingPattern/tree/master/src/designPattern/flyweight
+
+## observer pattern
+
+- 객체 사이에 일 대 다의 의존 관계를 정의해 두어, 어떤 객체의 상태가 변할 때 그 객체에 의존성을 가진 다른 객체들이 그 변화를 통지받고 자동으로 갱신될 수 있게 만든다.
+- Subject에 여러 Observer를 등록(Attach)해 두고, Notify를 하게 되면 루프를 돌면서 각 Observer를 Update하는 패턴이다.
+
+![](https://johngrib.github.io/post-img/observer-pattern/structure.jpg)
+
+### 고려할점
+ - Notify를 누가 호출해야 할까?
+  - Subject 에서 변경이 발생할 때, 변경을 저장하는 메소드가 Notify()를 호출하는 방법.
+  - 사용자(main 등)가 적절한 시기에 Notify()를 호출하는 방법.
+ - Observer의 행위가 Subject에 영향을 주는 경우
+  - 만약 Observer의 행위가 Subject에 영향을 주는 로직이 있다면, 무한 루프가 발생할 수 있으므로 주의할 필요가 있다.
+
+### Java 내장 Observable, Observer deprecated 이유
+ - Observable이 interface가 아니라 class이다.
+   -  인터페이스에 맞춰 프로그래밍한다는 객체지향 디자인 원칙을 위배한다.
+   -  이미 다른 클래스를 상속하는 클래스가 Observable을 상속할 수 없다.
+   -  따라서 재사용성에 제약이 생긴다.
+ - 상속 위주로 작업을 하게 된다.
+   - Observable을 사용하려면 서브 클래스를 만들어야 한다.
+   - Observable 내부에 protected 메소드가 있어, Observable의 서브클래스를 인스턴스 변수로 사용하는 방법도 써먹을 수가 없다.
+   - 상속보다 구성을 사용한다는 디자인 원칙을 위배한다.
+ - Observable이 java.util에 들어있기 때문에 재구현을 할 수 없다. 
+
+### 사용 되는 곳
+ - Java Swing 등의 GUI 프레임워크
+   - 다양한 버튼과 리스너들(Observer)
+
 예제 : 
-
-
