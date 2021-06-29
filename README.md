@@ -101,10 +101,10 @@ public static Integer valueOf(int i) {  // Flyweight 객체 제공 부분
 
 ### 고려할점
  - Notify를 누가 호출해야 할까?
-  - Subject 에서 변경이 발생할 때, 변경을 저장하는 메소드가 Notify()를 호출하는 방법.
-  - 사용자(main 등)가 적절한 시기에 Notify()를 호출하는 방법.
+   - Subject 에서 변경이 발생할 때, 변경을 저장하는 메소드가 Notify()를 호출하는 방법.
+   - 사용자(main 등)가 적절한 시기에 Notify()를 호출하는 방법.
  - Observer의 행위가 Subject에 영향을 주는 경우
-  - 만약 Observer의 행위가 Subject에 영향을 주는 로직이 있다면, 무한 루프가 발생할 수 있으므로 주의할 필요가 있다.
+   - 만약 Observer의 행위가 Subject에 영향을 주는 로직이 있다면, 무한 루프가 발생할 수 있으므로 주의할 필요가 있다.
 
 ### Java 내장 Observable, Observer deprecated 이유
  - Observable이 interface가 아니라 class이다.
